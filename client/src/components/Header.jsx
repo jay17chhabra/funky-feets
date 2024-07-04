@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import image from '../assets/items/adidas_yeezy_700_mauve.png';
-import { mobile } from '../responsive';
+import React from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import image from "../assets/items/adidas_yeezy_700_mauve.png";
+import { mobile } from "../responsive";
 
 const Header = () => {
   return (
@@ -10,10 +10,10 @@ const Header = () => {
       <Container>
         <Title>Buy A New Shoes</Title>
         <Info>
-          Take the time to be sure the shoes you buy are <br />
-          right for your feet
+          Ensure that the shoes you purchase are perfectly <br />
+          suited for your feet.
         </Info>
-        <Link to='/shop'>
+        <Link to="/shop">
           <Button>Buy Now</Button>
         </Link>
       </Container>
@@ -40,11 +40,11 @@ const Wrapper = styled.div`
 const Container = styled.div`
   flex: 1;
   ${mobile({
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginBottom: '5rem',
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBottom: "5rem",
   })}
 `;
 const Title = styled.h1`
@@ -78,7 +78,7 @@ const ImageContainer = styled.div`
   margin-right: 5rem;
   margin-bottom: 2rem;
   width: 100%;
-  ${mobile({ display: 'none' })}
+  ${mobile({ display: "none" })}
 `;
 const Image = styled.img`
   transform: rotateY(180deg);

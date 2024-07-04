@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 export const typeDefs = gql`
   scalar Date
@@ -27,8 +27,52 @@ export const typeDefs = gql`
     phoneNumber: String!
   }
 
+  type Product {
+    id: ID!
+    title: String!
+    brand: String!
+    model: String!
+    price: Float!
+    image: String
+    rates: Float!
+    numReviews: Int!
+    userReviews: [ID!]
+    reviews: [Reviews]
+    color: [String]!
+    inStock: Boolean!
+    size: [Float!]!
+    totalPages: Int
+  }
+
+  type ProductPagination {
+    products: [Product!]!
+    numOfPages: Int
+  }
+
+  type TopPicksProducts {
+    id: ID!
+    title: String!
+    rates: Int!
+    image: String!
+    price: Float!
+  }
+
+  type Reviews {
+    userId: ID!
+    rating: Float!
+  }
+
   type Query {
     getUserById: User!
+    getProducts(page: Int): [Product!]!
+    getProductsByTitle(searchQuery: String): [Product!]!
+    getProductById(productId: ID!): Product!
+    getTopPicksProducts: [Product]!
+    getDefaultTopPicks: [Product]!
+    getProductsPagination(
+      page: Int
+      productsFiltersInput: ProductsFiltersInput
+    ): ProductPagination!
   }
 
   input RegisterInput {
@@ -36,6 +80,15 @@ export const typeDefs = gql`
     username: String!
     password: String!
     confirmedPassword: String!
+  }
+
+  input ProductsFiltersInput {
+    brand: String
+    size: Float
+    color: String
+    price: [Int]
+    sort: String
+    rates: Float
   }
 
   input UpdateUserInput {
@@ -48,9 +101,46 @@ export const typeDefs = gql`
     currentPassword: String
   }
 
+  input UpdateShippingInput {
+    city: String
+    postalCode: String
+    country: String
+    phoneNumber: String
+    address: String
+  }
+
+  input AddProductInput {
+    title: String!
+    model: String!
+    brand: String!
+    image: String!
+    price: String
+    color: String
+    size: String
+  }
+  input UpdateProductInput {
+    productId: ID
+    title: String
+    model: String
+    brand: String
+    image: String
+    price: String
+    color: String
+    size: String
+  }
+
+  input DeleteProductInput {
+    productId: ID!
+  }
+
   type Mutation {
     login(username: String!, password: String!): User!
     register(registerInput: RegisterInput): User!
     updateUser(updateUserInput: UpdateUserInput): User!
+    addProduct(addProductInput: AddProductInput): Product!
+    updateProduct(updateProductInput: UpdateProductInput): Product!
+    deleteProduct(deleteProductInput: DeleteProductInput): Product!
+    createProductReview(productId: ID!, userRate: Int!): Product!
+    updateShipping(updateShippingInput: UpdateShippingInput): User!
   }
 `;
