@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const sizeEnum = [
   3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5,
@@ -10,7 +10,7 @@ const reviewSchema = mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User',
+    ref: "User",
   },
 });
 const productSchema = mongoose.Schema({
@@ -58,10 +58,10 @@ const productSchema = mongoose.Schema({
     default: true,
   },
 });
-productSchema.pre('save', async function () {
+productSchema.pre("save", async function () {
   if (this.size.length < 1) {
     this.inStock = false;
   }
 });
 
-export default mongoose.model('Product', productSchema);
+export default mongoose.model("Product", productSchema);
