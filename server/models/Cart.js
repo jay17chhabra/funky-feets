@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const cartSchema = mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
+    ref: "users",
     required: true,
   },
 
@@ -25,4 +25,4 @@ const cartSchema = mongoose.Schema({
   ],
 });
 
-export default mongoose.model('Cart', cartSchema);
+export default mongoose.model("Cart", cartSchema);

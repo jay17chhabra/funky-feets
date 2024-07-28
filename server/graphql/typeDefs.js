@@ -73,6 +73,40 @@ export const typeDefs = gql`
       page: Int
       productsFiltersInput: ProductsFiltersInput
     ): ProductPagination!
+    getUserCart: Cart!
+    getUserOrders(userId: ID!): [Order]
+  }
+
+  type Cart {
+    userId: ID!
+    cartProducts: [CartProducts]!
+  }
+
+  type CartProducts {
+    productId: String!
+    size: [Float!]!
+    productPrice: Int!
+    id: ID
+  }
+
+  type Order {
+    id: ID!
+    purchasedBy: ID!
+    orderProducts: [OrderProduct]
+    datePurchased: Date
+    paymentId: String
+  }
+
+  type OrderProduct {
+    productId: String
+    size: [Float]
+    productPrice: Float
+  }
+
+  input OrderProductInput {
+    productId: String!
+    size: [Float!]!
+    productPrice: Float!
   }
 
   input RegisterInput {
@@ -142,5 +176,17 @@ export const typeDefs = gql`
     deleteProduct(deleteProductInput: DeleteProductInput): Product!
     createProductReview(productId: ID!, userRate: Int!): Product!
     updateShipping(updateShippingInput: UpdateShippingInput): User!
+    addToCart(
+      userId: ID!
+      productId: ID!
+      size: [Float]!
+      productPrice: Int!
+    ): Cart!
+    deleteProductFromCart(id: ID!): Cart!
+    createOrder(
+      userId: ID!
+      cartProducts: [OrderProductInput!]!
+      paymentId: String!
+    ): Order!
   }
 `;

@@ -1,20 +1,23 @@
-import { ApolloServer } from 'apollo-server-express';
-import express from 'express';
-import 'dotenv/config';
-import { typeDefs } from './graphql/typeDefs.js';
-import resolvers from './graphql/resolvers/index.js';
-import connectDB from './db/connect.js';
+import { ApolloServer } from "apollo-server-express";
+import express from "express";
+import "dotenv/config";
+import { typeDefs } from "./graphql/typeDefs.js";
+import resolvers from "./graphql/resolvers/index.js";
+import connectDB from "./db/connect.js";
+import paymentRoutes from "./routes/payment.js";
+import bodyParser from "body-parser";
+import cors from "cors";
+import orderRoutes from "./routes/order.js";
 
-import path, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
-// const __dirname = dirname(fileURLToPath(import.meta.url));
-// app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(bodyParser.json());
 
-// app.get('*', function (req, res) {
-//   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-// });
+app.use(cors());
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const apolloServer = new ApolloServer({
   typeDefs,
@@ -29,7 +32,9 @@ const startServer = async () => {
   apolloServer.applyMiddleware({ app: app });
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(PORT, () => console.log('Server is running'));
+    app.use("/api", paymentRoutes);
+    app.use("/api", orderRoutes);
+    app.listen(PORT, () => console.log("Server is running"));
   } catch (error) {
     throw new Error(error);
   }
