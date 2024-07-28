@@ -1,18 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { Badge } from '@mui/material';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-import UserMenu from '../assets/mui/UserMenu';
-import { mobile } from '../responsive';
-import { Logo } from '../components';
-import { useSelector, useDispatch } from 'react-redux';
-
-import { useQuery } from '@apollo/client';
-
+import React from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { Badge } from "@mui/material";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import UserMenu from "../assets/mui/UserMenu";
+import { mobile } from "../responsive";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Logo, SearchBar } from "../components";
+import { useSelector, useDispatch } from "react-redux";
+import { GET_USER_CART } from "../graphql/Queries/cartQueries";
+import { useQuery } from "@apollo/client";
+import { toggleMobileMenu } from "../features/filterSlice";
 const Navbar = () => {
   const { userInfo } = useSelector((state) => state.user);
+  const { data } = useQuery(GET_USER_CART, {
+    variables: { userId: userInfo?.id },
+    skip: !userInfo,
+  });
 
   // eslint-disable-next-line
   const display = new Boolean();
@@ -24,31 +29,59 @@ const Navbar = () => {
       <Logo />
       <LinkContainer>
         <NavLink>
-          <Link className='link' to='/'>
+          <Link className="link" to="/">
             Home
           </Link>
         </NavLink>
         <NavLink>
-          <Link className='link' to='/shop'>
+          <Link className="link" to="/shop">
             Shop
           </Link>
         </NavLink>
       </LinkContainer>
+      <SearchBarContainer>
+        <SearchBar display={display} />
+      </SearchBarContainer>
 
       <UserContainer>
         {userInfo ? (
           <UserMenu />
         ) : (
           <Icon>
-            <Link to='/login'>
+            <Link to="/login">
               <UserLinks>
-                <PersonOutlineOutlinedIcon style={{ color: 'black', fontSize: '26px' }} />
+                <PersonOutlineOutlinedIcon
+                  style={{ color: "black", fontSize: "26px" }}
+                />
                 Sign in
               </UserLinks>
             </Link>
           </Icon>
         )}
+        {userInfo && (
+          <UserLinks>
+            <Link to="/cart" style={{ color: "var(--clr-mocha-2)" }}>
+              <Badge
+                sx={{ color: "var(--clr-mocha)" }}
+                color="primary"
+                style={{ paddingRight: "10px", marginTop: "3px" }}
+                badgeContent={data?.getUserCart.cartProducts.length || 0}
+              >
+                <Icon>
+                  <ShoppingCartOutlinedIcon style={{ color: "black" }} />
+                </Icon>
+                Cart
+              </Badge>
+            </Link>
+          </UserLinks>
+        )}
       </UserContainer>
+      <MobileMenu>
+        <MenuIcon
+          onClick={() => dispatch(toggleMobileMenu())}
+          style={{ cursor: "pointer", fontSize: "36px" }}
+        />
+      </MobileMenu>
     </Wrapper>
   );
 };
@@ -65,7 +98,7 @@ const LinkContainer = styled.div`
   align-items: center;
   width: 30%;
   justify-content: center;
-  ${mobile({ display: 'none' })}
+  ${mobile({ display: "none" })}
 `;
 
 const NavLink = styled.p`
@@ -90,7 +123,7 @@ const UserContainer = styled.div`
   width: 35%;
   align-items: center;
   justify-content: flex-end;
-  ${mobile({ display: 'none' })}
+  ${mobile({ display: "none" })}
 `;
 const UserLinks = styled.div`
   display: flex;
@@ -117,16 +150,16 @@ const Icon = styled.div`
 const MobileMenu = styled.div`
   display: none;
   ${mobile({
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    display: "flex",
+    width: "100%",
+    justifyContent: "flex-end",
+    alignItems: "center",
   })}
 `;
 const SearchBarContainer = styled.div`
   height: 0px;
   width: 30%;
   margin: 1rem;
-  ${mobile({ display: 'none' })}
+  ${mobile({ display: "none" })}
 `;
 export default Navbar;

@@ -5,7 +5,7 @@ import PowerSettingsNewIcon from "@mui/icons-material/PowerSettingsNew";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const sidebarLinks = [
   {
