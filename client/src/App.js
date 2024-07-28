@@ -4,7 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import jwtDecode from "jwt-decode";
 import { useQuery } from "@apollo/client";
 
-import { HomePage, LoginPage, RegisterPage, ErrorPage } from "./pages";
+import {
+  HomePage,
+  LoginPage,
+  RegisterPage,
+  ErrorPage,
+  ProductPage,
+  CartPage,
+  ShopPage,
+  OrderPage,
+  CheckoutPage,
+} from "./pages";
 
 import { ProtectedRoute, Footer } from "./components";
 
@@ -25,6 +35,7 @@ import EditingShipping from "./pages/UserDashboard/EditingShipping";
 import MainLayout from "./pages/UserDashboard/MainLayout";
 import ProtectedProfileRoute from "./components/ProtectedProfileRoute";
 import DeleteItem from "./pages/Admin/DeleteItem";
+import { PurchaseHistory } from "./pages/UserDashboard";
 
 const App = () => {
   const { userInfo } = useSelector((state) => state.user);
@@ -54,7 +65,9 @@ const App = () => {
     <>
       <Routes>
         <Route exact path="/" element={<HomePage />} />
-
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop/:id" element={<ProductPage />} />
+        <Route path="/cart" element={<CartPage />} />
         <Route path="*" element={<ErrorPage />} />
         <Route
           path="/login"
@@ -97,8 +110,25 @@ const App = () => {
           <Route path="editingprofile" element={<EditingProfile />} />
           <Route path="shipping" element={<UserShipping />} /> {/* Add this */}
           <Route path="editingshipping" element={<EditingShipping />} />{" "}
+          <Route path="/history" element={<PurchaseHistory />} />
           {/* Add this */}
         </Route>
+        <Route
+          path="/order"
+          element={
+            <ProtectedProfileRoute>
+              <OrderPage />
+            </ProtectedProfileRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedProfileRoute>
+              <CheckoutPage />
+            </ProtectedProfileRoute>
+          }
+        />
       </Routes>
 
       <Footer />

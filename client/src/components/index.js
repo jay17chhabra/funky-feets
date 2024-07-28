@@ -8,6 +8,23 @@ import MobileProfileBar from "./MobileProfileBar";
 import Logo from "./Logo";
 import LeftSidebar from "./LeftSidebar";
 import FormRow from "./FormRow";
+import Stars from "./Stars";
+import TopPicks from "./TopPicks";
+import OrderSum from "./OrderSum";
+import ProductsContainer from "./ProductsContainer";
+import ProductList from "./ProductList";
+import ShopHeader from "./ShopHeader";
+import ColorChart from "./ColorChart";
+import SizeChart from "./SizeChart";
+import BrandChart from "./BrandChart";
+import PriceChart from "./PriceChart";
+import ListView from "./ListView";
+import GridView from "./GridView";
+import Sort from "./Sort";
+import FilterTag from "./FilterTag";
+import FilterTags from "./FilterTags";
+import SearchBar from "./SearchBar";
+import CheckoutForm from "./CheckoutForm";
 
 export {
   Navbar,
@@ -20,4 +37,21 @@ export {
   FormRow,
   MobileProfileBar,
   ProtectedProfileRoute,
+  Stars,
+  OrderSum,
+  TopPicks,
+  ProductsContainer,
+  ProductList,
+  ShopHeader,
+  ColorChart,
+  SizeChart,
+  BrandChart,
+  PriceChart,
+  ListView,
+  GridView,
+  Sort,
+  FilterTag,
+  FilterTags,
+  SearchBar,
+  CheckoutForm,
 };
