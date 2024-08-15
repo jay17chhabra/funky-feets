@@ -91,12 +91,22 @@ const UPDATE_PRODUCT = gql`
   }
 `;
 
+// const DELETE_PRODUCT = gql`
+//   mutation ($productId: ID!) {
+//     deleteProduct(deleteProductInput: { productId: $productId }) {
+//       id
+//       title
+//     }
+//   }
+// `;
+
 const DELETE_PRODUCT = gql`
-  mutation ($productId: ID!) {
-    deleteProduct(deleteProductInput: { productId: $productId }) {
+  mutation ($title: String!) {
+    deleteProduct(deleteProductInput: { title: $title }) {
       id
       title
     }
   }
 `;
+
 export { CREATE_REVIEW, CREATE_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT };

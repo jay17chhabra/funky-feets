@@ -14,6 +14,8 @@ import {
   ShopPage,
   OrderPage,
   CheckoutPage,
+  AboutUs,
+  ContactUsPage,
 } from "./pages";
 
 import { ProtectedRoute, Footer } from "./components";
@@ -66,6 +68,8 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact-us" element={<ContactUsPage />} />
         <Route path="/shop/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="*" element={<ErrorPage />} />
