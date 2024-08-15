@@ -1,28 +1,30 @@
-import React, { useEffect } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
-import { useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import MuiError from '../assets/mui/Alert';
-import Loading from '../assets/mui/Loading';
-import { Navbar, OrderSum } from '../components';
-import CartItems from '../components/CartItems';
-import { GET_USER_CART } from '../graphql/Queries/cartQueries';
-import { GET_PRODUCTS } from '../graphql/Queries/productQueries';
-import { GET_USER_ORDER } from '../graphql/Queries/orderQueries';
-import { mobile } from '../responsive';
-import { validateShippingAddress } from '../utils/validators';
-import CheckoutForm from '../components/CheckoutForm'; // Import CheckoutForm
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import createOrder from '../utils/createOrder'; // Import the createOrder function
+import React, { useEffect, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import MuiError from "../assets/mui/Alert";
+import Loading from "../assets/mui/Loading";
+import { Navbar, OrderSum } from "../components";
+import CartItems from "../components/CartItems";
+import { GET_USER_CART } from "../graphql/Queries/cartQueries";
+import { GET_PRODUCTS } from "../graphql/Queries/productQueries";
+import { GET_USER_ORDER } from "../graphql/Queries/orderQueries";
+import { mobile } from "../responsive";
+import { validateShippingAddress } from "../utils/validators";
+import CheckoutForm from "../components/CheckoutForm"; // Import CheckoutForm
+import { loadStripe } from "@stripe/stripe-js";
+import createOrder from "../utils/createOrder"; // Import the createOrder function
+import { Elements } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe('pk_test_51PftGsCKGXqfEf1ryXYT3mKKALQaNIw95cpylPH5ythcubvRZ25bOqLAD37AUsLQi7wIM7QA9wyAgbSjNjIFrpOU00qdfnIUyI');
+const stripePromise = loadStripe(
+  "pk_test_51PftGsCKGXqfEf1ryXYT3mKKALQaNIw95cpylPH5ythcubvRZ25bOqLAD37AUsLQi7wIM7QA9wyAgbSjNjIFrpOU00qdfnIUyI"
+);
 
 const OrderPage = () => {
   const { userInfo, isLoading } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
   const { loading, data } = useQuery(GET_USER_CART, {
     variables: { userId: userInfo?.id },
   });
@@ -42,12 +44,12 @@ const OrderPage = () => {
   useEffect(() => {
     console.log("Cart Products in OrderPage:", cartProducts);
     if (data?.getUserCart.cartProducts.length < 1) {
-      navigate('/history');
+      navigate("/history");
     }
   }, [data?.getUserCart, navigate]);
 
   const handleCheckout = () => {
-    navigate('/checkout');
+    navigate("/checkout");
   };
 
   return (
@@ -75,18 +77,36 @@ const OrderPage = () => {
                   <Title>ORDERS</Title>
                   <CartContainer>
                     {cartProducts?.map((cartItem, index) => (
-                      <CartItems key={index} orderPage {...cartItem} />
+                      <CartItems
+                        key={index}
+                        orderPage
+                        {...cartItem}
+                        userId={userInfo.id}
+                      />
                     ))}
                   </CartContainer>
                 </OrderInfo>
               </Container>
               <OrderSummary>
                 <OrderSum
-                  onClick={handleCheckout}
+                  // onClick={handleCheckout}
+                  // cartProducts={cartProducts}
+                  // orderPage
+                  onClick={() => setShowPaymentForm(true)}
                   cartProducts={cartProducts}
                   orderPage
                 />
               </OrderSummary>
+              {showPaymentForm && (
+                <PaymentFormContainer>
+                  <Elements stripe={stripePromise}>
+                    <CheckoutForm
+                      userId={userInfo?.id}
+                      cartProducts={cartProducts}
+                    />
+                  </Elements>
+                </PaymentFormContainer>
+              )}
             </LoadingContainer>
             {/* <Elements stripe={stripePromise}>
               <CheckoutForm createOrder={createOrder} userId={userInfo?.id} cartProducts={cartProducts} />
@@ -116,7 +136,7 @@ const Container = styled.div`
 const LoadingContainer = styled.div`
   display: flex;
   width: 100%;
-  ${mobile({ display: 'flex', flexDirection: 'column' })}
+  ${mobile({ display: "flex", flexDirection: "column" })}
 `;
 
 const OrderInfo = styled.div`
@@ -143,8 +163,8 @@ const CartContainer = styled.div`
     width: 2px;
   }
   ${mobile({
-    margin: '0 auto',
-    padding: '0',
+    margin: "0 auto",
+    padding: "0",
   })}
 `;
 
@@ -155,10 +175,10 @@ const OrderSummary = styled.div`
   padding: 6rem;
   flex-direction: column;
   ${mobile({
-    display: 'flex',
-    padding: '0',
-    justifyContent: 'center',
-    width: '100%',
+    display: "flex",
+    padding: "0",
+    justifyContent: "center",
+    width: "100%",
   })}
 `;
 const ErrorContainer = styled.div`
@@ -183,4 +203,10 @@ const Button = styled.button`
   &:hover {
     background-color: var(--clr-mocha-2);
   }
+`;
+const PaymentFormContainer = styled.div`
+  width: 100%;
+  margin-top: 2rem;
+  background-color: #f8f8f8;
+  border-radius: 8px;
 `;

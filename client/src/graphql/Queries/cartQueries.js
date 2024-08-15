@@ -7,6 +7,7 @@ const GET_USER_CART = gql`
       cartProducts {
         productId
         size
+        quantity
         productPrice
         id
       }

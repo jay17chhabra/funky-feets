@@ -1,10 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import Stars from './Stars';
-import { Link } from 'react-router-dom';
-import { mobile } from '../responsive';
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import Stars from "./Stars";
+import { Link } from "react-router-dom";
+import { mobile } from "../responsive";
 
 const ProductsContainer = ({ title, image, price, rates, id }) => {
   return (
@@ -12,7 +12,7 @@ const ProductsContainer = ({ title, image, price, rates, id }) => {
       <Wrapper>
         <Link to={`/shop/${id}`}>
           <ImageContainer>
-            <Image src={image} />
+            <Image src={image} alt={title} />
           </ImageContainer>
 
           <Title>{title}</Title>
@@ -26,7 +26,7 @@ const ProductsContainer = ({ title, image, price, rates, id }) => {
         <PriceContainer>
           <Link to={`/shop/${id}`}>
             <Button>
-              Buy <AddShoppingCartIcon style={{ fontSize: '18px' }} />
+              Buy <AddShoppingCartIcon style={{ fontSize: "18px" }} />
             </Button>
           </Link>
           <Price>${price}</Price>
@@ -45,7 +45,7 @@ const Wrapper = styled.div`
   padding: 0px 1rem;
   width: 100%;
   margin-bottom: 2rem;
-  ${mobile({ minWidth: '350px' })}
+  ${mobile({ minWidth: "350px" })}
 `;
 const ImageContainer = styled.div`
   display: flex;

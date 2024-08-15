@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import HistoryItems from './HistoryItems';
+import React from "react";
+import styled from "styled-components";
+import HistoryItems from "./HistoryItems";
 
 const OrderComponent = ({ datePurchased, orderProducts, id }) => {
   return (

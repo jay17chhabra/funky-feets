@@ -30,7 +30,7 @@ const TopPicks = (props) => {
     <Wrapper>
       <HeaderContainer>
         <Header>
-          <Icon src={icon} />
+          <Icon src={icon} alt={"sneaker svg icon"} />
           TOP picks for you
         </Header>
         <Link to="/shop">

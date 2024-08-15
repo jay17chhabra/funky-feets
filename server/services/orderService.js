@@ -1,14 +1,14 @@
-import Cart from '../models/Cart.js'; // Importing the default export
-import Order from '../models/Order.js'; // Importing the default export
+import Cart from "../models/Cart.js"; // Importing the default export
+import Order from "../models/Order.js"; // Importing the default export
 
 export const createOrder = async (userId, cartProducts, paymentId) => {
   try {
     const newOrder = new Order({
-        purchasedBy: userId,
-        orderProducts: cartProducts,
-        paymentId,
-        datePurchased: new Date(),
-      });
+      purchasedBy: userId,
+      orderProducts: cartProducts,
+      paymentId,
+      datePurchased: new Date(),
+    });
 
     const savedOrder = await newOrder.save();
 
@@ -17,6 +17,6 @@ export const createOrder = async (userId, cartProducts, paymentId) => {
 
     return savedOrder;
   } catch (error) {
-    throw new Error('Error creating order: ' + error.message);
+    throw new Error("Error creating order: " + error.message);
   }
 };

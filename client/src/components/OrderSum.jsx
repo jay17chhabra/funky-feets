@@ -2,13 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import Loading from "../assets/mui/Loading";
 import { Link } from "react-router-dom";
+import CheckoutPage from "../pages/CheckoutPage";
 
 const OrderSum = ({ cartProducts, loading, link, onClick, orderPage }) => {
   const deliveryTax = 10.0;
   const salesTax = 5.0;
 
   const originalPriceCalculated = cartProducts?.reduce(
-    (acc, val) => Number(acc) + Number(val.productPrice),
+    (acc, val) => Number(acc) + Number(val.productPrice) * Number(val.quantity),
+    [0]
+  );
+
+  const totalQty = cartProducts?.reduce(
+    (acc, val) => Number(acc) + Number(val.quantity),
     [0]
   );
 
@@ -34,19 +40,23 @@ const OrderSum = ({ cartProducts, loading, link, onClick, orderPage }) => {
             <span>${parseFloat(originalPriceCalculated)?.toFixed(2)}</span>
           </Info>
           <Info>
+            Qty
+            <span>{parseFloat(totalQty)}</span>
+          </Info>
+          <Info>
             Delivery<span>${deliveryTax.toFixed(2)}</span>
           </Info>
           <Info>
-            GST/HST 13%<span>${salesTax.toFixed(2)}</span>
+            Sales tax<span>${salesTax.toFixed(2)}</span>
           </Info>
           <hr />
           <TotalContainer>
             <TotalPrice>Total</TotalPrice>
             <Price>${parseFloat(totalPriceCalculated)?.toFixed(2)}</Price>
           </TotalContainer>
-            <Button onClick={onClick}>
-              {orderPage ? "Place Order" : "Proceed To Checkout"}
-            </Button>
+          <Button onClick={onClick}>
+            {orderPage ? "Complete Order" : "Proceed To Checkout"}
+          </Button>
         </Container>
       )}
     </Wrapper>
