@@ -71,6 +71,15 @@ const GET_PRODUCTS_BY_TITLE = gql`
   }
 `;
 
+export const SEARCH_PRODUCTS = gql`
+  query SearchProducts($searchQuery: String!) {
+    getProductsByTitle(searchQuery: $searchQuery) {
+      id
+      title
+    }
+  }
+`;
+
 const GET_PRODUCT_BY_ID = gql`
   query ($productId: ID!) {
     getProductById(productId: $productId) {

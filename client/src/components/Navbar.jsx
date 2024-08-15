@@ -38,6 +38,16 @@ const Navbar = () => {
             Shop
           </Link>
         </NavLink>
+        <NavLink>
+          <Link className="link" to="/about">
+            About Us
+          </Link>
+        </NavLink>
+        <NavLink>
+          <Link className="link" to="/contact-us">
+            Contact Us
+          </Link>
+        </NavLink>
       </LinkContainer>
       <SearchBarContainer>
         <SearchBar display={display} />
@@ -96,7 +106,7 @@ const Wrapper = styled.div`
 const LinkContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 30%;
+  width: 50%;
   justify-content: center;
   ${mobile({ display: "none" })}
 `;

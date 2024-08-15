@@ -17,7 +17,7 @@ export const cart = {
   Mutation: {
     addToCart: async (
       _,
-      { userId, productId, size, productPrice },
+      { userId, productId, size, productPrice, quantity },
       context
     ) => {
       const userAuth = await auth(context);
@@ -45,11 +45,12 @@ export const cart = {
           productId,
           size,
           productPrice,
+          quantity,
         });
       } else {
         return new Cart({
           userId,
-          cartProducts: { size, productId, productPrice },
+          cartProducts: { size, productId, productPrice, quantity },
         }).save();
       }
 
@@ -75,6 +76,32 @@ export const cart = {
       await cart.save();
 
       return { ...cart._doc, userId: userAuth._id };
+    },
+
+    updateCartItemQuantity: async (
+      _,
+      { userId, productId, size, quantity },
+      context
+    ) => {
+      const userAuth = await auth(context);
+      const cart = await Cart.findOne({ userId: userAuth._id });
+
+      if (!cart) {
+        throw new UserInputError("Cart not found");
+      }
+
+      const cartItemIndex = cart.cartProducts.findIndex(
+        (item) => item.productId === productId && item.size.includes(size)
+      );
+
+      if (cartItemIndex === -1) {
+        throw new UserInputError("Cart item not found");
+      }
+
+      cart.cartProducts[cartItemIndex].quantity = quantity;
+      await cart.save();
+
+      return cart;
     },
   },
 };

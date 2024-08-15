@@ -1,9 +1,9 @@
-import mongoose from 'mongoose';
-import Cart from './Cart.js';
+import mongoose from "mongoose";
+import Cart from "./Cart.js";
 const orderSchema = mongoose.Schema({
   purchasedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'users',
+    ref: "users",
     required: true,
   },
   orderProducts: {
@@ -13,9 +13,13 @@ const orderSchema = mongoose.Schema({
   datePurchased: {
     type: Date,
   },
+  paymentId: {
+    type: String,
+    required: true,
+  },
 });
 
-orderSchema.pre('save', async function () {
+orderSchema.pre("save", async function () {
   const cart = await Cart.findOne({ userId: this.purchasedBy });
   if (cart) {
     cart.cartProducts = [];
@@ -24,4 +28,5 @@ orderSchema.pre('save', async function () {
   await cart.save();
 });
 
-export default mongoose.model('Order', orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+export default Order;

@@ -46,6 +46,7 @@ const ProductPage = () => {
         productId: id,
         size: shoeSize,
         productPrice: data?.getProductById.price,
+        quantity: 1,
       },
       refetchQueries: [
         {

@@ -1,12 +1,11 @@
 import { useQuery } from "@apollo/client";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Loading from "../assets/mui/Loading";
 import { GET_USER_CART } from "../graphql/Queries/cartQueries";
-
 
 import { Navbar, OrderSum, TopPicks } from "../components";
 import CartItems from "../components/CartItems";
@@ -25,13 +24,13 @@ const CartPage = () => {
     console.log("Cart Products:", data?.getUserCart.cartProducts);
     console.log("Error:", error);
   }, [userInfo, data, error]);
-  
+
   const cartProducts = data?.getUserCart.cartProducts;
   const cartLength = cartProducts?.length;
   const navigate = useNavigate();
-  
+
   const handleProceedToCheckout = () => {
-    navigate('/order');
+    navigate("/order");
   };
 
   return (
@@ -66,12 +65,16 @@ const CartPage = () => {
               </Header>
               <CartItemsContainer>
                 {cartProducts?.map((cartItem, index) => (
-                  <CartItems key={index} {...cartItem} />
+                  <CartItems key={index} {...cartItem} userId={userInfo.id} />
                 ))}
               </CartItemsContainer>
             </Container>
             <OrderSummary>
-              <OrderSum cartProducts={cartProducts} loading={loading} onClick={handleProceedToCheckout}/>
+              <OrderSum
+                cartProducts={cartProducts}
+                loading={loading}
+                onClick={handleProceedToCheckout}
+              />
             </OrderSummary>
           </div>
         )}

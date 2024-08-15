@@ -1,8 +1,8 @@
-import Cart from '../../models/Cart.js';
-import Order from '../../models/Order.js';
-import Product from '../../models/Product.js';
-import { auth } from '../../utils/auth.js';
-import { UserInputError } from 'apollo-server';
+import Cart from "../../models/Cart.js";
+import Order from "../../models/Order.js";
+import Product from "../../models/Product.js";
+import { auth } from "../../utils/auth.js";
+import { UserInputError } from "apollo-server";
 
 export const order = {
   Query: {
@@ -11,7 +11,7 @@ export const order = {
         const orders = await Order.find({ purchasedBy: userId });
         return orders;
       } catch (err) {
-        throw new Error('Error fetching user orders: ' + err.message);
+        throw new Error("Error fetching user orders: " + err.message);
       }
     },
   },
@@ -32,7 +32,7 @@ export const order = {
         }
       }
       if (cartProducts.length < 1) {
-        throw new UserInputError('No available order!');
+        throw new UserInputError("No available order!");
       }
       userAuth.topPicks.push(...topPicksBrands);
 

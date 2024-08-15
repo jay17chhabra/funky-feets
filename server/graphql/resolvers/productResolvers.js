@@ -1,6 +1,6 @@
-import Product from '../../models/Product.js';
-import { UserInputError } from 'apollo-server';
-import { auth } from '../../utils/auth.js';
+import Product from "../../models/Product.js";
+import { UserInputError } from "apollo-server";
+import { auth } from "../../utils/auth.js";
 
 export const products = {
   Query: {
@@ -27,14 +27,14 @@ export const products = {
         query.price = { $gte: price[0], $lte: price[1] };
       }
       let result = Product.find(query);
-      if (sort === 'price-lowest') {
-        result = result.sort('price');
+      if (sort === "price-lowest") {
+        result = result.sort("price");
       }
-      if (sort === 'price-highest') {
-        result = result.sort('-price');
+      if (sort === "price-highest") {
+        result = result.sort("-price");
       }
-      if (sort === 'top-rated') {
-        result = result.sort('-rates');
+      if (sort === "top-rated") {
+        result = result.sort("-rates");
       }
 
       const skip = (page - 1) * 12;
@@ -51,7 +51,7 @@ export const products = {
     getProductById: async (_, { productId }) => {
       const product = await Product.findById(productId);
       if (!product) {
-        throw new UserInputError('Sorry, no product found.');
+        throw new UserInputError("Sorry, no product found.");
       }
       return product;
     },
@@ -59,17 +59,20 @@ export const products = {
       if (!searchQuery) return;
 
       const products = await Product.find({
-        title: { $regex: searchQuery, $options: 'i' },
+        title: { $regex: searchQuery, $options: "i" },
       });
 
       return products;
     },
     getTopPicksProducts: async (_, {}, context) => {
+      console.log("getTopPicksProducts called");
       const userAuth = await auth(context);
+      console.log("Authenticated user:", userAuth);
       const userTopPicks = userAuth.topPicks;
+      console.log("User top picks:", userTopPicks);
 
       const topPicksProducts = await Product.find({ brand: userTopPicks });
-      const defaultPicks = await Product.find({ brand: 'Yeezy' });
+      const defaultPicks = await Product.find({ brand: "Yeezy" });
 
       let topPicks;
       if (topPicksProducts.length < 4) {
@@ -92,7 +95,7 @@ export const products = {
       return sortedTopPicks;
     },
     getDefaultTopPicks: async (_, {}) => {
-      const defaultPicks = await Product.find({ brand: 'Yeezy' });
+      const defaultPicks = await Product.find({ brand: "Yeezy" });
       const topPicks = defaultPicks.slice(0, 4);
       return topPicks;
     },
@@ -106,14 +109,14 @@ export const products = {
       const userAuth = await auth(context);
 
       if (!userAuth.isAdmin) {
-        throw new UserInputError('Must be an admin to add an item');
+        throw new UserInputError("Must be an admin to add an item");
       }
 
       if (!title || !model || !brand || !color || !price || !size || !image) {
-        throw new UserInputError('One or more fields are missing');
+        throw new UserInputError("One or more fields are missing");
       } else {
-        size = size.split(',').map((str) => Number(str));
-        color = color.split(',');
+        size = size.split(",").map((str) => Number(str));
+        color = color.split(",");
         price = Number(price);
       }
 
@@ -148,14 +151,14 @@ export const products = {
       const userAuth = await auth(context);
       const product = await Product.findById(productId);
       if (!userAuth.isAdmin) {
-        throw new UserInputError('Must be an admin to edit an item');
+        throw new UserInputError("Must be an admin to edit an item");
       }
       if (!product) {
-        throw new UserInputError('Sorry, no product found.');
+        throw new UserInputError("Sorry, no product found.");
       }
 
-      size = size.split(',').map((str) => Number(str));
-      color = color.split(',');
+      size = size.split(",").map((str) => Number(str));
+      color = color.split(",");
       price = Number(price);
 
       product.title = title || product.title;
@@ -174,22 +177,41 @@ export const products = {
 
       return product;
     },
-    deleteProduct: async (_, { deleteProductInput: { productId } }, context) => {
+    // deleteProduct: async (_, { deleteProductInput: { productId } }, context) => {
+    //   const userAuth = await auth(context);
+    //   if (!userAuth.isAdmin) {
+    //     throw new UserInputError('Must be an admin to delete an item');
+    //   }
+    //   console.log(`Received productId: ${productId}`);
+    //   const product = await Product.findById(productId);
+    //   if (!product) {
+    //     console.log(`Product with ID ${productId} not found`);
+    //     throw new UserInputError('Sorry, no product found.');
+    //   }
+    //   console.log(`Deleting product with ID ${productId} and title ${product.title}`);
+    //   await Product.deleteOne({ _id: productId });
+    //   console.log(`Product with ID ${productId} deleted successfully`);
+    //   return product;
+    // },
+
+    // productResolvers.js
+    deleteProduct: async (_, { deleteProductInput: { title } }, context) => {
       const userAuth = await auth(context);
       if (!userAuth.isAdmin) {
-        throw new UserInputError('Must be an admin to delete an item');
+        throw new UserInputError("Must be an admin to delete an item");
       }
-      console.log(`Received productId: ${productId}`);
-      const product = await Product.findById(productId);
+      console.log(`Received title: ${title}`);
+      const product = await Product.findOne({ title });
       if (!product) {
-        console.log(`Product with ID ${productId} not found`);
-        throw new UserInputError('Sorry, no product found.');
+        console.log(`Product with title ${title} not found`);
+        throw new UserInputError("Sorry, no product found.");
       }
-      console.log(`Deleting product with ID ${productId} and title ${product.title}`);
-      await Product.deleteOne({ _id: productId });
-      console.log(`Product with ID ${productId} deleted successfully`);
+      console.log(`Deleting product with title ${product.title}`);
+      await Product.deleteOne({ _id: product._id });
+      console.log(`Product with title ${product.title} deleted successfully`);
       return product;
     },
+
     createProductReview: async (_, { productId, userRate }, context) => {
       const userAuth = await auth(context);
       const product = await Product.findById(productId);
@@ -198,11 +220,11 @@ export const products = {
       );
 
       if (!product) {
-        throw new UserInputError('No product found!');
+        throw new UserInputError("No product found!");
       }
 
       if (alreadyReviewd) {
-        throw new UserInputError('You already reviewd this product');
+        throw new UserInputError("You already reviewd this product");
       }
 
       const review = {

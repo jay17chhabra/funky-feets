@@ -1,19 +1,57 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import ClearIcon from '@mui/icons-material/Clear';
-import Stars from './Stars';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_SINGLE_PRODUCT } from '../graphql/Queries/productQueries';
-import Loading from '../assets/mui/Loading';
-import { useSelector } from 'react-redux';
-import { DELETE_FROM_CART } from '../graphql/Mutations/cartMutations';
-import { GET_USER_CART } from '../graphql/Queries/cartQueries';
-import MuiError from '../assets/mui/Alert';
-import { mobile } from '../responsive';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { makeStyles } from "@mui/styles";
+import ClearIcon from "@mui/icons-material/Clear";
+import Stars from "./Stars";
+import { useMutation, useQuery } from "@apollo/client";
+import { GET_SINGLE_PRODUCT } from "../graphql/Queries/productQueries";
+import Loading from "../assets/mui/Loading";
+import { useSelector } from "react-redux";
+import { DELETE_FROM_CART } from "../graphql/Mutations/cartMutations";
+import { UPDATE_CART_ITEM_QUANTITY } from "../graphql/Mutations/cartMutations";
+import { GET_USER_CART } from "../graphql/Queries/cartQueries";
+import MuiError from "../assets/mui/Alert";
+import { mobile } from "../responsive";
+import { Select, MenuItem } from "@mui/material";
 
-const CartItems = ({ productId, size, id, orderPage, historyPage }) => {
+const useStyles = makeStyles({
+  select: {
+    height: "30px",
+    minWidth: "60px",
+    fontSize: "14px",
+    marginLeft: "10px",
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--clr-gray)",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--clr-primary)",
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "var(--clr-primary)",
+    },
+  },
+  menuItem: {
+    fontSize: "14px",
+  },
+});
+
+const CartItems = ({
+  productId,
+  size,
+  id,
+  orderPage,
+  historyPage,
+  userId,
+  quantity,
+}) => {
+  const classes = useStyles();
   const [cartItems, setCartItems] = useState([]);
   const { userInfo } = useSelector((state) => state.user);
+  const [upquantity, setQuantity] = useState(quantity || 1);
+
+  const [updateQuantity] = useMutation(UPDATE_CART_ITEM_QUANTITY, {
+    refetchQueries: [{ query: GET_USER_CART, variables: { userId } }],
+  });
 
   const { loading } = useQuery(GET_SINGLE_PRODUCT, {
     variables: { productId },
@@ -34,6 +72,18 @@ const CartItems = ({ productId, size, id, orderPage, historyPage }) => {
       ],
     });
 
+  const handleQuantityChange = async (event) => {
+    const newQuantity = parseInt(event.target.value, 10);
+    setQuantity(newQuantity);
+    try {
+      await updateQuantity({
+        variables: { userId, productId, size: size[0], quantity: newQuantity },
+      });
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  };
+
   const { image, title, model, price } = cartItems;
 
   return (
@@ -46,8 +96,8 @@ const CartItems = ({ productId, size, id, orderPage, historyPage }) => {
             <Loading />
           ) : deleteError ? (
             <MuiError
-              type='error'
-              value={'Something went wrong.. Please try again later'}
+              type="error"
+              value={"Something went wrong.. Please try again later"}
             />
           ) : (
             <ItemContainer>
@@ -55,24 +105,42 @@ const CartItems = ({ productId, size, id, orderPage, historyPage }) => {
                 <Image src={image} />
               </ImageContainer>
               <InfoContainer>
-                <Title>{title} </Title>
+                <Title>{title}</Title>
                 <Model>{model}</Model>
                 <Size>{`Sizes: ${size} US`}</Size>
-
-                <Qty>{`Qty: ${size?.length}`}</Qty>
+                <QtyContainer>
+                  Qty:
+                  <StyledSelect
+                    value={upquantity}
+                    onChange={handleQuantityChange}
+                    displayEmpty
+                    inputProps={{ "aria-label": "Without label" }}
+                    className={classes.select}
+                  >
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <MenuItem
+                        key={num}
+                        value={num}
+                        className={classes.menuItem}
+                      >
+                        {num}
+                      </MenuItem>
+                    ))}
+                  </StyledSelect>
+                </QtyContainer>
               </InfoContainer>
             </ItemContainer>
           )}
           {historyPage ? (
             <SaleInfo>
               <h4>Sale Info:</h4>
-              <div className='info'>
+              <div className="info">
                 Date Purchased: <span>21/11/2021</span>
               </div>
-              <div className='info'>
+              <div className="info">
                 Day: <span>Sunday</span>
               </div>
-              <div className='rating-container'>
+              <div className="rating-container">
                 <h3>Rate this item</h3>
                 <Stars />
               </div>
@@ -80,24 +148,24 @@ const CartItems = ({ productId, size, id, orderPage, historyPage }) => {
           ) : (
             <PriceContainer>
               {loading ? (
-                ''
+                ""
               ) : deleteLoading ? (
-                ''
+                ""
               ) : deleteError ? (
-                ''
+                ""
               ) : (
                 <div
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-evenly',
-                    flexDirection: 'column',
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    flexDirection: "column",
                   }}
                 >
                   {orderPage ? (
-                    ''
+                    ""
                   ) : (
                     <ClearIcon
-                      className='icon'
+                      className="icon"
                       onClick={() => deleteProduct()}
                     />
                   )}
@@ -131,10 +199,10 @@ const ItemContainer = styled.div`
 const ImageContainer = styled.div``;
 const Image = styled.img`
   width: 180px;
-  ${mobile({ width: '120px', marginTop: '1rem' })}
+  ${mobile({ width: "120px", marginTop: "1rem" })}
 `;
 const InfoContainer = styled.div`
-  width: ${(props) => (props.historyPage ? '60%' : '40%')};
+  width: ${(props) => (props.historyPage ? "60%" : "40%")};
   margin-top: 1rem;
 `;
 
@@ -161,13 +229,13 @@ const Price = styled.h2`
   align-self: end;
   margin-right: 2rem;
   ${mobile({
-    margin: '0.5rem',
-    padding: '0',
+    margin: "0.5rem",
+    padding: "0",
   })}
 `;
 
 const PriceContainer = styled.div`
-  display: ${(props) => (props.historyPage ? 'none' : 'flex')};
+  display: ${(props) => (props.historyPage ? "none" : "flex")};
   width: 10%;
   margin-top: 0.5rem;
   flex-direction: column;
@@ -206,5 +274,19 @@ const SaleInfo = styled.div`
     h3 {
       font-weight: 600;
     }
+  }
+`;
+
+const QtyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 0.5rem;
+`;
+
+const StyledSelect = styled(Select)`
+  && {
+    margin-left: 10px;
   }
 `;

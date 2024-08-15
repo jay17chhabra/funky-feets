@@ -1,47 +1,54 @@
-import { useMutation } from '@apollo/client';
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import MuiError from '../../assets/mui/Alert';
-import { FormRow } from '../../components';
+import { useMutation } from "@apollo/client";
+import React, { useState } from "react";
+import styled from "styled-components";
+import MuiError from "../../assets/mui/Alert";
+import { FormRow } from "../../components";
 import { DELETE_PRODUCT } from "../../graphql/Mutations/productMutation";
-import Loading from '../../assets/mui/Loading';
-import { useForm } from '../../utils/customHooks';
+import Loading from "../../assets/mui/Loading";
+import { useForm } from "../../utils/customHooks";
 
 const DeleteItem = () => {
   const initialState = {
-    productId: '',
-    errors: '',
-    successMessage: '',
+    productId: "",
+    errors: "",
+    successMessage: "",
   };
 
-  const { onChange, onSubmit, values } = useForm(deleteProductFunction, initialState);
+  const { onChange, onSubmit, values } = useForm(
+    deleteProductFunction,
+    initialState
+  );
 
   const [deleteProduct, { loading, error }] = useMutation(DELETE_PRODUCT, {
     onCompleted({ deleteProduct }) {
       values.successMessage = `Product ${deleteProduct.title} deleted successfully.`;
-      values.errors = '';
+      values.errors = "";
     },
     onError(err) {
       values.errors = err.message;
-      values.successMessage = '';
-    }
+      values.successMessage = "";
+    },
   });
 
+  // function deleteProductFunction() {
+  //   deleteProduct({ variables: { productId: values.productId } });
+  // }
   function deleteProductFunction() {
-    deleteProduct({ variables: { productId: values.productId } });
+    deleteProduct({ variables: { title: values.title } });
   }
-
   return (
     <Wrapper>
       {loading ? (
         <Loading />
       ) : (
         <Form onSubmit={onSubmit}>
-          <Title>Please type the ID of the item to delete</Title>
+          <Title>Please type the title of the item to delete</Title>
           <FormRow
-            name="productId"
+            //name="productId"
+            name="title"
             type="text"
-            value={values.productId}
+            //value={values.productId}
+            value={values.title}
             onChange={onChange}
           />
           <Button type="submit">Delete</Button>
@@ -52,7 +59,7 @@ const DeleteItem = () => {
           ) : values.successMessage ? (
             <MuiError type="success">{values.successMessage}</MuiError>
           ) : (
-            ''
+            ""
           )}
         </Form>
       )}

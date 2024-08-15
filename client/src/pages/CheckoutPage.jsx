@@ -1,20 +1,21 @@
-import React from 'react';
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
-import { useSelector } from 'react-redux';
-import { useQuery } from '@apollo/client';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import CheckoutForm from '../components/CheckoutForm';
-import { GET_USER_CART } from '../graphql/Queries/cartQueries';
-import { Navbar } from '../components';  // Assuming you have a Navbar component
-import Loading from '../assets/mui/Loading';
-import MuiError from '../assets/mui/Alert';
+import React from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { useSelector } from "react-redux";
+import { useQuery } from "@apollo/client";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import CheckoutForm from "../components/CheckoutForm";
+import { GET_USER_CART } from "../graphql/Queries/cartQueries";
+import { Navbar } from "../components"; // Assuming you have a Navbar component
+import Loading from "../assets/mui/Loading";
+import MuiError from "../assets/mui/Alert";
 
-const stripePromise = loadStripe('pk_test_51PftGsCKGXqfEf1ryXYT3mKKALQaNIw95cpylPH5ythcubvRZ25bOqLAD37AUsLQi7wIM7QA9wyAgbSjNjIFrpOU00qdfnIUyI');
+const stripePromise = loadStripe(
+  "pk_test_51PftGsCKGXqfEf1ryXYT3mKKALQaNIw95cpylPH5ythcubvRZ25bOqLAD37AUsLQi7wIM7QA9wyAgbSjNjIFrpOU00qdfnIUyI"
+);
 
 const CheckoutPage = () => {
-
   const { userInfo, isLoading } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
@@ -23,36 +24,40 @@ const CheckoutPage = () => {
   });
 
   const cartProducts = data?.getUserCart.cartProducts;
-  console.log('User Info in CheckoutPage:', userInfo); // Debug statement
-  console.log('Cart Products in CheckoutPage:', cartProducts); // Debug statement
+  console.log("User Info in CheckoutPage:", userInfo); // Debug statement
+  console.log("Cart Products in CheckoutPage:", cartProducts); // Debug statement
 
   if (loading || isLoading) return <Loading />;
-  if (error) return <MuiError type="error" value="Something went wrong, please try again later." />;
+  if (error)
+    return (
+      <MuiError
+        type="error"
+        value="Something went wrong, please try again later."
+      />
+    );
   if (!cartProducts.length) {
-    navigate('/cart');
+    navigate("/cart");
     return null;
   }
 
+  return (
+    <div className="section-center">
+      <Navbar />
 
-    return (
-      <div className='section-center'>
-        <Navbar />  
-        <Wrapper>
-          <Elements stripe={stripePromise}>
-            <CheckoutForm />
-          </Elements>
-        </Wrapper>
-      </div>
-    );
-  };
-  
-  export default CheckoutPage;
-  
-  const Wrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f8f8;
-    padding: 2rem;  /* Add padding */
-  `;
+      <Elements stripe={stripePromise}>
+        <CheckoutForm />
+      </Elements>
+    </div>
+  );
+};
+
+export default CheckoutPage;
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5efec;
+  padding: 2rem;
+`;

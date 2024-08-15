@@ -86,6 +86,7 @@ export const typeDefs = gql`
     productId: String!
     size: [Float!]!
     productPrice: Int!
+    quantity: Int!
     id: ID
   }
 
@@ -164,7 +165,7 @@ export const typeDefs = gql`
   }
 
   input DeleteProductInput {
-    productId: ID!
+    title: String!
   }
 
   type Mutation {
@@ -180,7 +181,14 @@ export const typeDefs = gql`
       userId: ID!
       productId: ID!
       size: [Float]!
+      quantity: Int!
       productPrice: Int!
+    ): Cart!
+    updateCartItemQuantity(
+      userId: ID!
+      productId: ID!
+      size: Float!
+      quantity: Int!
     ): Cart!
     deleteProductFromCart(id: ID!): Cart!
     createOrder(

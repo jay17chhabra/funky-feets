@@ -1,13 +1,13 @@
-import { useMutation, useQuery } from '@apollo/client';
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { GET_SINGLE_PRODUCT } from '../graphql/Queries/productQueries';
-import Stars from './Stars';
-import moment from 'moment';
-import { CREATE_REVIEW } from '../graphql/Mutations/productMutation';
-import Loading from '../assets/mui/Loading';
-import MuiError from '../assets/mui/Alert';
-import { mobile } from '../responsive';
+import { useMutation, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { GET_SINGLE_PRODUCT } from "../graphql/Queries/productQueries";
+import Stars from "./Stars";
+import moment from "moment";
+import { CREATE_REVIEW } from "../graphql/Mutations/productMutation";
+import Loading from "../assets/mui/Loading";
+import MuiError from "../assets/mui/Alert";
+import { mobile } from "../responsive";
 
 const HistoryItems = ({ productId, datePurchased, size }) => {
   const [historyItems, setHistoryItems] = useState([]);
@@ -60,20 +60,20 @@ const HistoryItems = ({ productId, datePurchased, size }) => {
           <SaleInfoTitle>Sale Info:</SaleInfoTitle>
           <Info>
             Date Purchased:
-            <span>{moment(datePurchased).format('MMMM Do YYYY, h:mm a')}</span>
+            <span>{moment(datePurchased).format("MMMM Do YYYY, h:mm a")}</span>
           </Info>
           <Info>
-            Day: <span>{moment(datePurchased).format('dddd')}</span>
+            Day: <span>{moment(datePurchased).format("dddd")}</span>
           </Info>
           {loading ? (
             <Loading />
           ) : error ? (
-            <MuiError width='80%' type='error' value={error.message} />
+            <MuiError width="80%" type="error" value={error.message} />
           ) : success ? (
             <MuiError
-              width='80%'
-              type='success'
-              value={'Thank you for your review!'}
+              width="80%"
+              type="success"
+              value={"Thank you for your review!"}
             />
           ) : (
             <RatingContainer>
@@ -102,7 +102,7 @@ const Container = styled.div`
   width: 100%;
   margin: 2rem 0 0;
   border-radius: 1rem;
-  ${mobile({ flexDirection: 'column' })}
+  ${mobile({ flexDirection: "column" })}
 `;
 
 const ItemsContainer = styled.div`
@@ -111,24 +111,24 @@ const ItemsContainer = styled.div`
   height: 25vh;
   justify-content: space-evenly;
   ${mobile({
-    height: '30vh',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    height: "30vh",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   })}
 `;
 
 const ImageContainer = styled.div``;
 const Image = styled.img`
   height: 25vh;
-  ${mobile({ width: '200px', marginTop: '15px' })}
+  ${mobile({ width: "200px", marginTop: "15px" })}
 `;
 
 const InfoContainer = styled.div`
   width: 50%;
   margin-top: 0.5rem;
-  ${mobile({ margin: '0', width: '90%' })}
+  ${mobile({ margin: "0", width: "90%" })}
 `;
 
 const Title = styled.h4``;
@@ -148,7 +148,7 @@ const Price = styled.h4`
 `;
 
 const SaleInfo = styled.div`
-  ${mobile({ width: '100%', marginTop: '2rem', padding: '10px' })}
+  ${mobile({ width: "100%", marginTop: "2rem", padding: "10px" })}
   display: flex;
   flex-direction: column;
   border-left: 1px solid var(--clr-border);
