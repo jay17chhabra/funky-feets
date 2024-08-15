@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const Logo = () => {
   return (
     <Wrapper>
-      <Image src={aboutimage} />
+      <Image src={aboutimage} alt="FunkyFeets logo" />
       <Title>{/* <Link to="/">FunkyFeets</Link> */}</Title>
     </Wrapper>
   );

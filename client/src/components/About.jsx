@@ -11,7 +11,7 @@ const About = () => {
         <Title>
           <img
             src={aboutimage}
-            alt="Logo"
+            alt="Nike Jordan Sneaker"
             style={{ width: "100px", marginRight: "1rem" }}
           />
           About FunkyFeets
@@ -36,7 +36,7 @@ const About = () => {
         </Info>
       </AboutContainer>
       <ImageContainer>
-        <Image src={image} />
+        <Image src={image} alt="Nike Sneaker with Black Tick" />
       </ImageContainer>
     </Wrapper>
   );

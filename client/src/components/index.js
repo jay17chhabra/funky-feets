@@ -25,6 +25,7 @@ import FilterTag from "./FilterTag";
 import FilterTags from "./FilterTags";
 import SearchBar from "./SearchBar";
 import CheckoutForm from "./CheckoutForm";
+import BrandsComponent from "./BrandsComponent";
 
 export {
   Navbar,
@@ -54,4 +55,5 @@ export {
   FilterTags,
   SearchBar,
   CheckoutForm,
+  BrandsComponent,
 };

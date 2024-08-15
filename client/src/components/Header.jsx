@@ -23,7 +23,7 @@ const Header = () => {
           YEEZY
           <br /> BOOST 700
         </ImageTitle>
-        <Image src={image} />
+        <Image src={image} alt="Brown Sneaker" />
       </ImageContainer>
     </Wrapper>
   );

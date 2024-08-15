@@ -11,7 +11,7 @@ const ListView = ({ data, filteredProducts }) => {
           const { title, image, price, rates, id } = product;
           return (
             <ProductContainer key={id}>
-              <Image src={image} />
+              <Image src={image} alt={title} />
               <InfoContainer>
                 <Title>{title}</Title>
 

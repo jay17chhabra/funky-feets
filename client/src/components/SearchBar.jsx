@@ -38,6 +38,9 @@ const SearchBar = ({ display }) => {
         <IconContainer>
           <SearchIcon />
         </IconContainer>
+        <Label htmlFor="search-input" className="visually-hidden">
+          Search for brand or model
+        </Label>
         <Input
           type="text"
           value={searchValue}
@@ -119,4 +122,9 @@ const Result = styled.p`
   &:hover {
     background-color: var(--clr-mocha-hover);
   }
+`;
+const Label = styled.label`
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
 `;
